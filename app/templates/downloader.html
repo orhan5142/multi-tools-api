@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Downloader | MultiTool</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/css/downloader.css">
+
+</head>
+
+<body class="light-mode">
+
+    {% include 'partials/_header.html' %}
+
+    <div class="container main-content">
+        <div class="title-section">
+            <h1><span id="platform-name">Video</span> Downloader</h1>
+            <p id="platform-subtitle">Download videos from your favorite social platforms in seconds</p>
+        </div>
+
+        <div class="download-container">
+            <div class="url-input-container">
+                <input type="text" id="url-input" placeholder="Paste your video link here..." autocomplete="off">
+            </div>
+
+            <button class="download-btn" id="download-btn">
+                <i class="fas fa-arrow-down"></i>
+                <span>Download Now</span>
+            </button>
+        </div>
+
+        <div class="results-section" id="results-section">
+            <div class="processing-indicator">
+                <i class="fas fa-cog fa-spin"></i>
+                <span>Processing your download...</span>
+            </div>
+
+            <div class="status-bar">
+                <div class="progress" id="progress-bar"></div>
+            </div>
+
+            <div class="download-result" id="download-result">
+                <div class="download-info">
+                    <div class="media-thumbnail">
+                        <img src="" alt="Video Thumbnail" id="video-thumbnail" class="thumbnail-img">
+                        <div class="thumbnail-placeholder" id="thumbnail-placeholder">
+                            <i class="fas fa-video"></i>
+                            <span>No Thumbnail</span>
+                        </div>
+                    </div>
+                    <div class="media-details" id="media-details">
+                    </div>
+                </div>
+                <div class="available-formats" id="available-formats">
+                </div>
+            </div>
+        </div>
+
+        <div class="features-section">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3 class="feature-title">Lightning Fast</h3>
+                <p class="feature-desc">Download videos in seconds with our optimized servers and parallel processing
+                    technology.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <h3 class="feature-title">Multi-Platform</h3>
+                <p class="feature-desc">Support for YouTube, Instagram, TikTok, Facebook, Twitter and many more
+                    platforms.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h3 class="feature-title">100% Safe</h3>
+                <p class="feature-desc">No registration required. We don't store your videos or personal information.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    {% include 'partials/_footer.html' %}
+
+    <script src="/static/js/common.js"></script>
+    <script src="/static/js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const platform = urlParams.get('platform') || 'video';
+
+            const platformData = {
+                'youtube': { name: 'YouTube', subtitle: 'Download videos from YouTube in any format', color: '#FF0000' },
+                'instagram': { name: 'Instagram', subtitle: 'Download Reels, IGTV, and Stories', color: '#E1306C' },
+                'tiktok': { name: 'TikTok', subtitle: 'Download without watermark in HD quality', color: '#000000' },
+                'facebook': { name: 'Facebook', subtitle: 'Download videos from Facebook', color: '#1877F2' },
+                'twitter': { name: 'Twitter', subtitle: 'Download videos from Twitter', color: '#1DA1F2' },
+                'video': { name: 'Video', subtitle: 'Download videos from your favorite social platforms', color: '#01D26D' }
+            };
+
+            const data = platformData[platform] || platformData['video'];
+            document.title = `${data.name} Downloader | MultiTool`;
+            document.getElementById('url-input').placeholder = `Paste ${data.name} video link here...`;
+            document.getElementById('platform-name').textContent = data.name;
+            document.getElementById('platform-subtitle').textContent = data.subtitle;
+
+            if (platform !== 'video') {
+                const style = document.createElement('style');
+                style.innerHTML = `
+                    .title-section h1 span { color: ${data.color} !important; }
+                    .download-btn { background-color: ${data.color} !important; }
+                    .download-btn:hover:not(:disabled) { background-color: ${data.color} !important; opacity: 0.9; }
+                    .url-input-container:focus-within { box-shadow: 0 0 0 2px ${data.color} !important; }
+                    .processing-indicator i { color: ${data.color} !important; }
+                    .status-bar .progress { background-color: ${data.color} !important; box-shadow: 0 0 10px ${data.color} !important; }
+                    .thumbnail-placeholder i { color: ${data.color} !important; }
+                    .feature-icon { color: ${data.color} !important; }
+                    .format-item:hover { border-color: ${data.color} !important; }
+                    .format-info .fas { color: ${data.color} !important; }
+                    .format-item .download-icon { color: ${data.color} !important; }
+                    .feature-card:hover { border-color: ${data.color} !important; }
+                `;
+                document.head.appendChild(style);
+            }
+        });
+    </script>
+</body>
+
+</html>

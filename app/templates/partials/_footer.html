@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        footer {
+            background: #FFFFFF;
+            padding: 48px 0 24px;
+            border-top: 1px solid #e0e0e0;
+            position: relative;
+            margin-top: 20px;
+        }
+
+        footer::before {
+            content: '';
+            display: block;
+            height: 60px;
+            width: 100%;
+            position: absolute;
+            top: -60px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+
+        .footer-col {
+            padding: 0 15px;
+        }
+
+        .footer-col h4 {
+            margin-bottom: 16px;
+            color: #01D26D;
+        }
+
+        .footer-col p {
+            font-size: 13px;
+            color: #757575;
+            line-height: 1.5;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .footer-links a {
+            color: #757575;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 13px;
+        }
+
+        .footer-links a:hover {
+            color: #01D26D;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 24px;
+            color: #757575;
+            font-size: 13px;
+            padding-top: 24px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        @media (max-width: 768px) {
+            .footer-col {
+                text-align: center;
+                margin-bottom: 24px;
+            }
+
+            .footer-links {
+                align-items: center;
+            }
+
+            .footer-grid {
+                margin-bottom: 0;
+            }
+
+            footer::before {
+                height: 40px;
+                top: -40px;
+            }
+        }
+
+        /* Dark Mode Overrides */
+        body.dark-mode footer {
+            background: #2E3440 !important;
+            border-color: #434C5E !important;
+        }
+
+        body.dark-mode .footer-col p {
+            color: #D8DEE9 !important;
+        }
+
+        body.dark-mode .footer-links a {
+            color: #D8DEE9 !important;
+        }
+
+        body.dark-mode .copyright {
+            color: #D8DEE9 !important;
+            border-color: #434C5E !important;
+        }
+    </style>
+</head>
+
+<body>
+    <footer id="about">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>MULTITOOL</h4>
+                    <p>All your digital tools in one powerful platform. Simplify your workflow and boost productivity.
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4>Tools</h4>
+                    <div class="footer-links">
+                        <a href="/downloader?platform=youtube">YouTube Downloader</a>
+                        <a href="/downloader?platform=instagram">Instagram Downloader</a>
+                        <a href="/downloader?platform=tiktok">TikTok Downloader</a>
+                        <a href="/pdfconvertertypes">PDF Converter</a>
+                        <a href="/imageconvertertypes">Image Converter</a>
+                        <a href="/voicetotext">Voice-to-Text</a>
+                        <a href="/imagecompressor">Image Compressor</a>
+                        <a href="/videocompressor">Video Compressor</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <div class="footer-links">
+                        <a href="https://learn.alqoritmika.az/course">About Us</a>
+                        <a href="https://learn.alqoritmika.az/course">Contact</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <div class="footer-links">
+                        <a href="#">Terms of Service</a>
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Cookie Policy</a>
+                        <a href="#">GDPR Compliance</a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2026 Alqoritmika.az. All rights reserved.
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

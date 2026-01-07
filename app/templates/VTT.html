@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EchoScript | Voice-to-Text</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/inter-ui/3.19.3/inter.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/common.css">
+
+  <style>
+    header {
+      width: 100%;
+      text-align: center;
+      padding: 2rem 0;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.03em;
+    }
+
+    .logo-accent {
+      color: #01D26D;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #757575;
+      font-weight: 400;
+    }
+
+    .input-section {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 2rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .tabs {
+      display: flex;
+      margin-bottom: 1.5rem;
+      background: #FFFFFF;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 4px;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 0.75rem;
+      text-align: center;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      color: #757575;
+    }
+
+    .tab.active {
+      background-color: #01D26D;
+      color: #fff;
+    }
+
+    .input-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .drop-area {
+      width: 100%;
+      height: 180px;
+      border: 2px dashed #e0e0e0;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .drop-area:hover,
+    .drop-area.active {
+      border-color: #01D26D;
+      background-color: rgba(74, 110, 224, 0.1);
+    }
+
+    .drop-area i {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #757575;
+    }
+
+    .record-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .record-button {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: rgba(74, 110, 224, 0.1);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 1rem;
+    }
+
+    .record-button:hover {
+      transform: scale(1.05);
+      background-color: rgba(1, 210, 109, 0.2);
+    }
+
+    .record-button.recording {
+      animation: pulse 1.5s infinite;
+      background-color: #e74c3c;
+    }
+
+    .record-button.recording i {
+      color: #fff;
+    }
+
+    .record-button i {
+      font-size: 1.8rem;
+      color: #01D26D;
+    }
+
+    .record-status {
+      margin-top: 0.5rem;
+      color: #757575;
+      font-size: 0.9rem;
+    }
+
+    .timer {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .file-info {
+      background: #FFFFFF;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 1rem;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+
+    #file-name {
+      word-break: break-all;
+      overflow: hidden;
+      max-width: calc(100% - 2.2rem);
+    }
+
+    .file-info i {
+      margin-right: 1rem;
+      color: #01D26D;
+      font-size: 1.2rem;
+    }
+
+    .convert-btn {
+      width: 100%;
+      padding: 1rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+      background-color: #01D26D;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 0.02em;
+    }
+
+    .convert-btn:hover:not(:disabled) {
+      box-shadow: 0 0 15px rgba(1, 210, 109, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .convert-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .result-section {
+      width: 100%;
+      max-width: 700px;
+      margin: 2rem auto 0;
+      display: none;
+      transition: all 0.5s ease;
+    }
+
+    .result-section.visible {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .result-container {
+      background-color: #FFFFFF;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 1.5rem;
+      width: 100%;
+    }
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .result-title {
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+
+    .result-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .action-btn {
+      background-color: rgba(74, 110, 224, 0.1);
+      border: 1px solid #e0e0e0;
+      color: #333333;
+      padding: 0.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .action-btn:hover {
+      background-color: #01D26D;
+      color: #fff;
+      border-color: #01D26D;
+    }
+
+    .result-text {
+      min-height: 200px;
+      max-height: 400px;
+      overflow-y: auto;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      padding-right: 0.5rem;
+      border: none;
+      background: transparent;
+      color: #333333;
+      width: 100%;
+      font-family: inherit;
+      font-size: 1rem;
+    }
+
+    .result-text:focus {
+      outline: none;
+    }
+
+    .loader {
+      width: 50px;
+      height: 50px;
+      border: 3px solid #e0e0e0;
+      border-top: 3px solid #01D26D;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 2rem auto;
+    }
+
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .loading-overlay.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .loading-text {
+      margin-top: 1rem;
+      font-size: 1.1rem;
+      color: #01D26D;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7);
+      }
+
+      70% {
+        box-shadow: 0 0 0 15px rgba(231, 76, 60, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      .drop-area {
+        height: 150px;
+      }
+    }
+
+    /* Dark Mode Overrides */
+    body.dark-mode .subtitle {
+      color: #D8DEE9 !important;
+    }
+
+    body.dark-mode .tabs {
+      background: #2E3440 !important;
+      border-color: #434C5E !important;
+    }
+
+    body.dark-mode .tab {
+      color: #D8DEE9 !important;
+    }
+
+    body.dark-mode .drop-area {
+      border-color: #434C5E !important;
+    }
+
+    body.dark-mode .drop-area:hover,
+    body.dark-mode .drop-area.active {
+      background-color: rgba(74, 110, 224, 0.2) !important;
+    }
+
+    body.dark-mode .drop-area i {
+      color: #D8DEE9 !important;
+    }
+
+    body.dark-mode .record-button {
+      background-color: rgba(74, 110, 224, 0.2) !important;
+    }
+
+    body.dark-mode .record-status {
+      color: #D8DEE9 !important;
+    }
+
+    body.dark-mode .file-info {
+      background: #2E3440 !important;
+      border-color: #434C5E !important;
+    }
+
+    body.dark-mode .result-container {
+      background: #2E3440 !important;
+      border-color: #434C5E !important;
+    }
+
+    body.dark-mode .result-header {
+      border-color: #434C5E !important;
+    }
+
+    body.dark-mode .action-btn {
+      background-color: rgba(74, 110, 224, 0.2) !important;
+      border-color: #434C5E !important;
+      color: #ECEFF4 !important;
+    }
+
+    body.dark-mode .result-text {
+      color: #ECEFF4 !important;
+    }
+
+    body.dark-mode .loader {
+      border-color: #434C5E !important;
+    }
+  </style>
+</head>
+
+<body class="light-mode">
+  {% include 'partials/_header.html' %}
+
+  <div class="container">
+    <header>
+      <h1>Echo<span class="logo-accent">Script</span></h1>
+      <p class="subtitle">Convert your voice into text instantly and accurately</p>
+    </header>
+
+    <main class="input-section">
+      <div class="tabs">
+        <div class="tab" id="record-tab">
+          <i class="fas fa-microphone"></i> Record
+        </div>
+        <div class="tab active" id="upload-tab">
+          <i class="fas fa-file-audio"></i> Upload
+        </div>
+      </div>
+
+      <div class="input-container">
+        <div class="record-container" id="record-area" style="display: none;">
+          <button class="record-button" id="record-btn">
+            <i class="fas fa-microphone"></i>
+          </button>
+          <div class="timer" id="timer">00:00</div>
+          <p class="record-status" id="record-status">Click to start recording</p>
+        </div>
+
+        <div class="drop-area" id="upload-area">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <p>Drag and drop your audio file here</p>
+          <p class="record-status">Or click to browse</p>
+          <input type="file" id="file-input" accept=".mp3,.wav,.m4a,.ogg,.webm" style="display: none;">
+        </div>
+
+        <div class="file-info" id="file-info" style="display: none;">
+          <i class="fas fa-file-audio"></i>
+          <div>
+            <p id="file-name">No file selected</p>
+            <p id="file-duration" class="record-status"></p>
+          </div>
+        </div>
+
+        <button class="convert-btn" id="convert-btn" disabled>Convert to Text</button>
+      </div>
+    </main>
+
+    <section class="result-section" id="result-section">
+      <div class="result-container">
+        <div class="result-header">
+          <h2 class="result-title">Transcription Result</h2>
+          <div class="result-actions">
+            <button class="action-btn" id="copy-btn" title="Copy to clipboard">
+              <i class="fas fa-copy"></i>
+            </button>
+            <button class="action-btn" id="download-btn" title="Download as .txt">
+              <i class="fas fa-download"></i>
+            </button>
+          </div>
+        </div>
+        <textarea class="result-text" id="result-text"></textarea>
+      </div>
+    </section>
+  </div>
+
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="loader"></div>
+    <p class="loading-text">Processing audio... this may take a moment.</p>
+  </div>
+  {% include 'partials/_footer.html' %}
+
+  <script>
+    const recordTab = document.getElementById('record-tab');
+    const uploadTab = document.getElementById('upload-tab');
+    const recordArea = document.getElementById('record-area');
+    const uploadArea = document.getElementById('upload-area');
+    const recordBtn = document.getElementById('record-btn');
+    const recordStatus = document.getElementById('record-status');
+    const timerEl = document.getElementById('timer');
+    const fileInput = document.getElementById('file-input');
+    const fileInfo = document.getElementById('file-info');
+    const fileNameEl = document.getElementById('file-name');
+    const fileDurationEl = document.getElementById('file-duration');
+    const convertBtn = document.getElementById('convert-btn');
+    const resultSection = document.getElementById('result-section');
+    const resultText = document.getElementById('result-text');
+    const copyBtn = document.getElementById('copy-btn');
+    const downloadBtn = document.getElementById('download-btn');
+    const loadingOverlay = document.getElementById('loading-overlay');
+
+    let isRecording = false;
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let timerInterval = null;
+    let selectedFile = null;
+    let recordingTime = 0;
+
+    recordTab.addEventListener('click', () => {
+      switchTab('record');
+    });
+
+    uploadTab.addEventListener('click', () => {
+      switchTab('upload');
+    });
+
+    function switchTab(tabName) {
+      if (tabName === 'record') {
+        recordTab.classList.add('active');
+        uploadTab.classList.remove('active');
+        recordArea.style.display = 'flex';
+        uploadArea.style.display = 'none';
+        if (!isRecording) selectedFile = null;
+      } else {
+        uploadTab.classList.add('active');
+        recordTab.classList.remove('active');
+        recordArea.style.display = 'none';
+        uploadArea.style.display = 'flex';
+        if (isRecording) stopRecording();
+      }
+      updateUI();
+    }
+
+    recordBtn.addEventListener('click', async () => {
+      if (isRecording) {
+        stopRecording();
+      } else {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          startRecording(stream);
+        } catch (err) {
+          recordStatus.textContent = 'Microphone access denied. Please allow it in your browser settings.';
+          console.error('Error accessing microphone:', err);
+        }
+      }
+    });
+
+    function startRecording(stream) {
+      audioChunks = [];
+      mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+
+      mediaRecorder.addEventListener('dataavailable', event => {
+        audioChunks.push(event.data);
+      });
+
+      mediaRecorder.addEventListener('stop', () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        selectedFile = new File([audioBlob], `recording-${timestamp}.webm`, { type: 'audio/webm' });
+        updateUI();
+      });
+
+      startTimer();
+      mediaRecorder.start();
+      isRecording = true;
+      recordBtn.innerHTML = '<i class="fas fa-stop"></i>';
+      recordStatus.textContent = 'Recording...';
+      updateUI();
+    }
+
+    function stopRecording() {
+      if (mediaRecorder) {
+        mediaRecorder.stop();
+        mediaRecorder.stream.getTracks().forEach(track => track.stop());
+        stopTimer();
+        isRecording = false;
+        recordBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+        recordStatus.textContent = 'Click to start recording';
+      }
+    }
+
+    function startTimer() {
+      stopTimer();
+      recordingTime = 0;
+      timerInterval = setInterval(() => {
+        recordingTime++;
+        updateTimerDisplay();
+      }, 1000);
+      updateTimerDisplay();
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+    }
+
+    function updateTimerDisplay() {
+      timerEl.textContent = formatTime(recordingTime);
+    }
+
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+      const secs = (seconds % 60).toString().padStart(2, '0');
+      return `${mins}:${secs}`;
+    }
+
+    uploadArea.addEventListener('click', () => fileInput.click());
+    uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('active'); });
+    uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('active'));
+    uploadArea.addEventListener('drop', e => {
+      e.preventDefault();
+      uploadArea.classList.remove('active');
+      if (e.dataTransfer.files.length > 0) {
+        handleFileSelection(e.dataTransfer.files[0]);
+      }
+    });
+
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length > 0) {
+        handleFileSelection(fileInput.files[0]);
+      }
+    });
+
+    function handleFileSelection(file) {
+      const validTypes = ['audio/mp3', 'audio/wav', 'audio/m4a', 'audio/ogg', 'audio/mpeg', 'audio/x-m4a', 'audio/webm'];
+      if (!validTypes.some(type => file.type.startsWith(type.split('/')[0]))) {
+        alert('Please select a valid audio file (MP3, WAV, M4A, OGG, WEBM)');
+        return;
+      }
+      selectedFile = file;
+      updateUI();
+    }
+
+    function updateUI() {
+      recordBtn.classList.toggle('recording', isRecording);
+
+      if (selectedFile) {
+        fileNameEl.textContent = selectedFile.name;
+        const audio = new Audio(URL.createObjectURL(selectedFile));
+        audio.onloadedmetadata = () => {
+          fileDurationEl.textContent = formatTime(Math.round(audio.duration));
+          URL.revokeObjectURL(audio.src);
+        };
+        audio.onerror = () => {
+          fileDurationEl.textContent = `${(selectedFile.size / (1024 * 1024)).toFixed(2)} MB`;
+          URL.revokeObjectURL(audio.src);
+        };
+        fileInfo.style.display = 'flex';
+        uploadArea.style.display = 'none';
+      } else {
+        fileInfo.style.display = 'none';
+        if (uploadTab.classList.contains('active')) {
+          uploadArea.style.display = 'flex';
+        }
+      }
+
+      convertBtn.disabled = !selectedFile || isRecording;
+    }
+
+    convertBtn.addEventListener('click', async () => {
+      if (!selectedFile) {
+        alert('Please record or upload an audio file first.');
+        return;
+      }
+
+      loadingOverlay.classList.add('visible');
+      resultSection.classList.remove('visible');
+
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+
+      try {
+        const response = await fetch('/transcribe', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.detail || `Server error: ${response.status}`);
+        }
+
+        const result = await response.json();
+        resultText.value = result.text;
+        resultSection.classList.add('visible');
+
+      } catch (error) {
+        console.error('Transcription failed:', error);
+        alert(`An error occurred during transcription: ${error.message}`);
+      } finally {
+        loadingOverlay.classList.remove('visible');
+      }
+    });
+
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(resultText.value)
+        .then(() => {
+          const originalIcon = copyBtn.innerHTML;
+          copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+          setTimeout(() => { copyBtn.innerHTML = originalIcon; }, 1500);
+        })
+        .catch(err => {
+          console.error('Failed to copy text:', err);
+          alert('Could not copy text to clipboard.');
+        });
+    });
+
+    downloadBtn.addEventListener('click', () => {
+      const text = resultText.value;
+      const blob = new Blob([text], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const fileName = (selectedFile.name.split('.')[0] || 'transcript') + '.txt';
+
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+
+      setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 0);
+    });
+
+    switchTab('upload');
+  </script>
+</body>
+
+</html>
