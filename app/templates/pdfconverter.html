@@ -830,7 +830,8 @@
             let response;
 
             if (config.isUrlInput) {
-                response = await fetch(`http://localhost:8000${config.apiEndpoint}`, {
+                // Use relative path for URL-based API calls as well
+                response = await fetch(config.apiEndpoint, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -849,7 +850,8 @@
                 if (toolType === 'pdf-to-jpg') {
                     formData.append('dpi', '300');
                 }
-                response = await fetch(`http://localhost:8000${config.apiEndpoint}`, {
+                // Use relative path so requests go to the same host serving the page
+                const response = await fetch(config.apiEndpoint, {
                     method: 'POST',
                     body: formData
                 });

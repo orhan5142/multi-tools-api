@@ -764,7 +764,10 @@
             const formData = new FormData();
             formData.append('file', selectedFile);
 
-            const response = await fetch(`http://localhost:8000${config.apiEndpoint}`, {
+            // Use relative path so the browser sends requests to the same host
+            // that's serving the page. Avoid hardcoding localhost which breaks
+            // when accessed remotely.
+            const response = await fetch(config.apiEndpoint, {
                 method: 'POST',
                 body: formData
             });
